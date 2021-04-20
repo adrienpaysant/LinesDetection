@@ -151,6 +151,7 @@ def showAndWait(string, img) :
     cv2.destroyAllWindows()
 
 def imgHisto(imagePath):
+    """ Display the histogram of the image at a given path """
     img=cv2.imread (imagePath)
     #RGB -> HSV.
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
@@ -170,6 +171,7 @@ def imgHisto(imagePath):
 
 
 def imgCaract(imagePath):
+    """ print few infos of the image at the given path"""
     img=cv2.imread(imagePath)
     cv2.imshow(imagePath,img)#affichage image
     print("\n******\n"+"INFOS IMAGE : "+imagePath)
