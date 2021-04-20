@@ -1,4 +1,4 @@
-import ImageTools 
+import imageTools 
 import os
 import cv2
 
@@ -10,15 +10,14 @@ if __name__ == "__main__":
     path='./source_images/'
     file="0.jpg"
     imgPath=os.path.join(path, file)
-    #ImageTools.areaDetection(os.path.join(path, file))
+    #imageTools.areaDetection(os.path.join(path, file))
 
     #ImageTools.edgeDetectAndShowCanny(imgPath)
     #ImageTools.edgeDetectAndShowHough(imgPath)
-    dataHSV=ImageTools.hsvSpace(imgPath)
-    ImageTools.imgCaract(imgPath)
-    ImageTools.showAndWait("Histo",ImageTools.imgHisto(imgPath))
-    ImageTools.showAndWait("HSV Space",dataHSV)
+    dataHSV=imageTools.hsvSpace(imgPath)
+    #imageTools.imgCaract(imgPath)
+    imageTools.imgHisto(imgPath)
+    imageTools.showAndWait("HSV Space",dataHSV)
 
     cv2.waitKey(0)
-
     print('Main End')

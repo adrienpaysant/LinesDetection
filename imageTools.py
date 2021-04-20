@@ -3,7 +3,10 @@ import cv2
 import numpy as np
 import numpy as np
 from matplotlib import pyplot as plt
+from win32api import GetSystemMetrics
 
+WIDTH_SCREEN= GetSystemMetrics(0)
+HEIGHT_SCREEN= GetSystemMetrics(1)
 
 ############################################################
 ############################################################
@@ -126,19 +129,26 @@ def edgeDetectAndShowHough(imagePath):
 ############################################################
 
 def showAndWait(string, img) :
-    try:
-        cv2.imshow(string, img)
-        print('Original Dimensions : ',img.shape)
- 
-        scale_percent = 60 # percent of original size
-        width = int(img.shape[1] * scale_percent / 100)
-        height = int(img.shape[0] * scale_percent / 100)
-        dim = (width, height)
+    """ Simple show for img that insure to fit in screen """
 
-    except:
-        print('')
+    #get a nice coef
+    primaryW=int(img.shape[1])
+    primaryH=int(img.shape[0])
+    coefW=0.6/(primaryW/WIDTH_SCREEN)
+    coefH=0.6/(primaryH/HEIGHT_SCREEN)
+    coef=max(coefH,coefW)
+    
+    scale_percent = int(coef*100) # percent of original size
+    width = int(img.shape[1] * scale_percent / 100)
+    height = int(img.shape[0] * scale_percent / 100)
+    dim = (width, height)
+    
+    # resize image
+    resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
+    #display
+    cv2.imshow(string, resized)
     cv2.waitKey(0)
-
+    cv2.destroyAllWindows()
 
 def imgHisto(imagePath):
     img=cv2.imread (imagePath)
