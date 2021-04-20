@@ -12,10 +12,10 @@ if __name__ == "__main__":
     imgPath=os.path.join(path, file)
     #imageTools.areaDetection(os.path.join(path, file))
 
-    #ImageTools.edgeDetectAndShowCanny(imgPath)
-    #ImageTools.edgeDetectAndShowHough(imgPath)
+    # imageTools.edgeDetectAndShowCanny(imgPath)
+    # imageTools.edgeDetectAndShowHough(imgPath)
     dataHSV=imageTools.hsvSpace(imgPath)
-    #imageTools.imgCaract(imgPath)
+    # imageTools.imgCaract(imgPath)
     imageTools.imgHisto(imgPath)
     imageTools.showAndWait("HSV Space",dataHSV)
 
