@@ -4,6 +4,83 @@ import numpy as np
 import numpy as np
 from matplotlib import pyplot as plt
 
+
+############################################################
+############################################################
+###################Basics Transforms########################
+############################################################
+############################################################
+
+def hsvSpace(imagePath):
+    img=cv2.imread (imagePath)
+    return  cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+
+
+    
+############################################################
+############################################################
+####################Shape Detection#########################
+############################################################
+############################################################
+
+def shapeDetection(imagePath):
+    img = cv2.imread(imagePath)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    ret,thresh = cv2.threshold(gray,127,255,1)
+
+    contours,h = cv2.findContours(thresh,1,2)
+
+    for cnt in contours:
+        approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
+        print (len(approx))
+        if len(approx) > 15:
+            print ("circle")
+            cv2.drawContours(img,[cnt],0,(0,255,255),-1)
+
+    return img
+
+def areaDetection(imgPath):
+    img=cv2.imread (imgPath)
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    h,s,v= cv2.split(hsv)
+    ret_h, th_h = cv2.threshold(h,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    ret_s, th_s = cv2.threshold(s,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    #Fusion th_h et th_s
+    th=cv2.bitwise_or(th_h,th_s)
+    #Ajouts de bord à l'image
+    bordersize=10
+    th=cv2.copyMakeBorder(th, top=bordersize, bottom=bordersize, left=bordersize, right=bordersize, borderType= cv2.BORDER_CONSTANT, value=[0,0,0] )
+    #Remplissage des contours
+    im_floodfill = th.copy()
+    h, w = th.shape[:2]
+    mask = np.zeros((h+2, w+2), np.uint8)
+    cv2.floodFill(im_floodfill, mask, (0,0), 255)
+    im_floodfill_inv = cv2.bitwise_not(im_floodfill)
+    th = th | im_floodfill_inv
+    #Enlèvement des bord de l'image
+    th=th[bordersize: len(th)-bordersize,bordersize: len(th[0])-bordersize]
+    resultat=cv2.bitwise_and(img,img,mask=th)
+    cv2.imwrite("output/im_floodfill.png",im_floodfill)
+    cv2.imwrite("output/th.png",th)
+    cv2.imwrite("output/resultat.png",resultat)
+    contours, hierarchy = cv2.findContours(th,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
+    for i in range (0, len(contours)) :
+        mask_BB_i = np.zeros((len(th),len(th[0])), np.uint8)
+        x,y,w,h = cv2.boundingRect(contours[i])
+        cv2.drawContours(mask_BB_i, contours, i, (255,255,255), -1)
+        BB_i=cv2.bitwise_and(img,img,mask=mask_BB_i)
+        if h >15 and w>15 :
+            BB_i=BB_i[y:y+h,x:x+w]
+            cv2.imwrite("output/BB_"+str(i)+".png",BB_i)
+
+############################################################
+############################################################
+####################Edges Detection#########################
+############################################################
+############################################################
+
 def edgeDetectAndShowCanny(imagePath):
     img = cv2.imread(imagePath)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -39,28 +116,48 @@ def edgeDetectAndShowHough(imagePath):
         cv2.circle(img,(i[0],i[1]),2,(0,0,255),3)
     showAndWait('Circle Detection',img)
 
-def shapeDetection(imagePath):
-    img = cv2.imread(imagePath)
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    ret,thresh = cv2.threshold(gray,127,255,1)
 
-    contours,h = cv2.findContours(thresh,1,2)
 
-    for cnt in contours:
-        approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
-        print (len(approx))
-        if len(approx) > 15:
-            print ("circle")
-            cv2.drawContours(img,[cnt],0,(0,255,255),-1)
-
-    cv2.imshow('img',img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+############################################################
+############################################################
+##############Caracteristiques & Display####################
+############################################################
+############################################################
 
 def showAndWait(string, img) :
-    cv2.imshow(string, img)
+    try:
+        cv2.imshow(string, img)
+        print('Original Dimensions : ',img.shape)
+ 
+        scale_percent = 60 # percent of original size
+        width = int(img.shape[1] * scale_percent / 100)
+        height = int(img.shape[0] * scale_percent / 100)
+        dim = (width, height)
+
+    except:
+        print('')
     cv2.waitKey(0)
+
+
+def imgHisto(imagePath):
+    img=cv2.imread (imagePath)
+    #RGB -> HSV.
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    #Déclaration des couleurs des courbes
+    color = ('r','g','b')
+    #Déclaration des noms des courbes.
+    labels = ('h','s','v')
+    #Pour col allant r à b et pour i allant de 0 au nombre de couleurs
+    for i,col in enumerate(color):
+        #Hist prend la valeur de l'histogramme de hsv sur la canal i.
+        hist = cv2.calcHist([hsv],[i],None,[256],[0,256])
+        # Plot de hist.
+        plt.plot(hist,color = col,label=labels[i])
+        plt.xlim([0,256])
+    #Affichage.
+    plt.show()
+
 
 def imgCaract(imagePath):
     img=cv2.imread(imagePath)
