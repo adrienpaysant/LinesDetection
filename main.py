@@ -10,13 +10,15 @@ if __name__ == "__main__":
     path='./source_images/'
     file="0.jpg"
     imgPath=os.path.join(path, file)
-    #imageTools.areaDetection(os.path.join(path, file))
 
+
+    #imageTools.areaDetection(os.path.join(path, file))
     # imageTools.edgeDetectAndShowCanny(imgPath)
     # imageTools.edgeDetectAndShowHough(imgPath)
     dataHSV=imageTools.hsvSpace(imgPath)
     # imageTools.imgCaract(imgPath)
     imageTools.imgHisto(imgPath)
+    imageTools.showAndWait("basic shape detect",imageTools.shapeDetection(imgPath))
     imageTools.showAndWait("HSV Space",dataHSV)
 
     cv2.waitKey(0)

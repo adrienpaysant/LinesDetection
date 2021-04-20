@@ -15,6 +15,7 @@ HEIGHT_SCREEN= GetSystemMetrics(1)
 ############################################################
 
 def hsvSpace(imagePath):
+    """ return image form give path on HSV colors"""
     img=cv2.imread (imagePath)
     return  cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
@@ -28,6 +29,9 @@ def hsvSpace(imagePath):
 ############################################################
 
 def shapeDetection(imagePath):
+    """ Return an image with shape detected
+        Note : this is working very badly
+        """
     img = cv2.imread(imagePath)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -37,14 +41,16 @@ def shapeDetection(imagePath):
 
     for cnt in contours:
         approx = cv2.approxPolyDP(cnt,0.01*cv2.arcLength(cnt,True),True)
-        print (len(approx))
+        #print (len(approx))
         if len(approx) > 15:
-            print ("circle")
+            #print ("circle")
             cv2.drawContours(img,[cnt],0,(0,255,255),-1)
 
     return img
 
 def areaDetection(imgPath):
+    """ Detect remarkable part of images
+        output : image with detected areas + area localy  """
     img=cv2.imread (imgPath)
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     h,s,v= cv2.split(hsv)
