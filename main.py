@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     path='./source_images/'
     file="0.jpg"
-    ImageTools.edgeDetectAndShow(os.path.join(path, file))
+    ImageTools.shapeDetection(os.path.join(path, file))
 
 
     cv2.waitKey(0)
