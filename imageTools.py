@@ -4,6 +4,10 @@ import numpy as np
 import numpy as np
 from matplotlib import pyplot as plt
 from win32api import GetSystemMetrics
+import sys
+
+sys.setrecursionlimit(10000)
+
 
 WIDTH_SCREEN= GetSystemMetrics(0)
 HEIGHT_SCREEN= GetSystemMetrics(1)
@@ -83,6 +87,49 @@ def areaDetection(imgPath):
         if h >15 and w>15 :
             BB_i=BB_i[y:y+h,x:x+w]
             cv2.imwrite("output/BB_"+str(i)+".png",BB_i)
+
+
+def searchNeighbor(A,M,N,i0,j0):
+    if A[i0,j0]==255:
+        return([i0,j0])
+    q=0
+    while True:
+        q+=1
+        for i in range(i0-q,i0+q+1):
+            j=j0-q
+            if i>=0 and i<M and j>=0 and j<N and A[i,j]==255:
+                return([i,j])
+            j=j0+q
+            if i>=0 and i<M and j>=0 and j<N and A[i,j]==255:
+                return([i,j])
+        for j in range(j0-q+1,j0+q):
+            i=i0-q
+            if i>=0 and i<M and j>=0 and j<N and A[i,j]==255:
+                return([i,j])
+            i=i0+q
+            if i>=0 and i<M and j>=0 and j<N and A[i,j]==255:
+                return([i,j])
+
+def testPixelObject(A,M,N,i,j,pixList):
+    pixList.append([i,j])
+    A[i,j]=100
+    near=[(i+1,j),(i-1,j),(i,j-1),(i,j+1)]
+    for (k,l) in near:
+        if k>=0 and k<M and l>=0 and l<N:
+            if A[k,l]==255:
+                testPixelObject(A,M,N,k,l,pixList)
+                
+def barycenter(pixList):
+    N=len(pixList)
+    xG=0.0
+    yG=0.0
+    for pixel in pixList:
+        xG += pixel[1]
+        yG += pixel[0]
+    xG /= N
+    yG /= N
+    return ([xG,yG])
+
 
 ############################################################
 ############################################################
