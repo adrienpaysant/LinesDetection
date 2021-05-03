@@ -11,23 +11,6 @@ import math
 WIDTH_SCREEN = GetSystemMetrics(0)
 HEIGHT_SCREEN = GetSystemMetrics(1)
 
-############################################################
-############################################################
-###################Basics Transforms########################
-############################################################
-############################################################
-
-def hsvSpace(imagePath):
-    """ return image form give path on HSV colors"""
-    img=cv2.imread (imagePath)
-    return  cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    
-############################################################
-############################################################
-####################Shape Detection#########################
-############################################################
-############################################################
-
 class Marble:
     def __init__(self,center,radius):
         self.center=center
@@ -68,13 +51,23 @@ def getClosestPointOnLine(marble1,marble2,marbleRunning):
     xMax = max(x1,x2)
     yMin = min(y1,y2)
     yMax = max(y1,y2)
-    if(xMin<=x and yMin<=y):
-        if(x<=xMax and y <=yMax):
-            return x, y
-        else :
-            return xMax,yMax
+    xFinal = x
+    yFinal = y
+    #Check x minimum and maximum
+    if(xMin<=x):
+        if(x>xMax):
+            xFinal=xMax
     else :
-        return xMin,yMin
+        xFinal=xMin
+
+    #Check y minimum and maximum
+    if(yMin<=y):
+        if(y>yMax):
+            yFinal=yMax
+    else :
+        yFinal=yMin
+        
+    return xFinal,yFinal
 
 def getSideOfLine(p1,p2,p3):
     x1, y1 = p1
@@ -154,11 +147,6 @@ def shapeDetectionOnImage(imagePath):
 def shapeDetectionOnOldImage(imagePath):
     img = cv2.imread(imagePath)
     return shapeDetection(img,127,150,50,3,1,11)
-############################################################
-############################################################
-##############Caracteristiques & Display####################
-############################################################
-############################################################
 
 def showAndWait(string, img) :
     """ Simple show for img that insure to fit in screen """
@@ -181,22 +169,3 @@ def showAndWait(string, img) :
     cv2.imshow(string, resized)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-
-def imgHisto(imagePath):
-    """ Display the histogram of the image at a given path """
-    img=cv2.imread (imagePath)
-    #RGB -> HSV.
-    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-    #Déclaration des couleurs des courbes
-    color = ('r','g','b')
-    #Déclaration des noms des courbes.
-    labels = ('h','s','v')
-    #Pour col allant r à b et pour i allant de 0 au nombre de couleurs
-    for i,col in enumerate(color):
-        #Hist prend la valeur de l'histogramme de hsv sur la canal i.
-        hist = cv2.calcHist([hsv],[i],None,[256],[0,256])
-        # Plot de hist.
-        plt.plot(hist,color = col,label=labels[i])
-        plt.xlim([0,256])
-    #Affichage.
-    plt.show()

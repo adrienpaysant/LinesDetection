@@ -5,6 +5,7 @@ import numpy
 import matplotlib.pyplot as plt
 
 def videoProgram():
+    print("=======================VIDEO========================")
     video = cv.VideoCapture("./source_videos/data.mp4")
     newVideo = cv.VideoWriter("newVideo.avi",cv.CAP_OPENCV_MJPEG,cv.VideoWriter_fourcc('M','J','P','G'),10,(1920,1080),True)
     numberOfFrame = 0
@@ -22,16 +23,16 @@ def videoProgram():
     video.release()
     newVideo.release()
 
-if __name__ == "__main__":
-    print('Main Launching')
-
-
+def imageProgram():
+    print("=======================IMAGE========================")
     imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnOldImage(f"./source_images/{0}.jpg"))
     imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnOldImage(f"./source_images/{1}.jpg"))
     for i in range(2,6):
         imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnImage(f"./source_images/{i}.jpg"))
 
+if __name__ == "__main__":
+
+    imageProgram()
+
     # videoProgram()
     cv.waitKey(0)
-    print('Main End')
-
