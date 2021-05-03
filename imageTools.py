@@ -118,13 +118,13 @@ def shapeDetectionOnVideo(img):
     #newImage = img
     contours, hierarchy = cv2.findContours(res, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cv2.drawContours(newImage, contours, -1, (255, 0, 0), 5)
-    showAndWait("test",newImage)
+    # showAndWait("test",newImage)
     marblesSet = set()
     for cnt in contours:
         M = cv2.moments(cnt)
         (x,y),radius = cv2.minEnclosingCircle(cnt)
 
-        if(radius > 40 and radius <300):
+        if(radius > 50 and radius <300):
             center = (int(x),int(y))
             radius = int(radius)
             marblesSet.add(Marble(center,radius))

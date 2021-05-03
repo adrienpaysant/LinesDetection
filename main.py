@@ -16,7 +16,7 @@ if __name__ == "__main__":
     #     imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnImage(f"./source_images/{i}.jpg"))
 
     video = cv.VideoCapture("./source_videos/data.mp4")
-
+    newVideo = cv.VideoWriter("newVideo.avi",cv.CAP_OPENCV_MJPEG,cv.VideoWriter_fourcc('M','J','P','G'),10,(1920,1080),True)
     currentFrame = 0
     while(True):
 
@@ -25,8 +25,8 @@ if __name__ == "__main__":
     
         if ret:
             print("ret")
-            imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnVideo(frame))
-    
+            img = imageTools.shapeDetectionOnVideo(frame)
+            newVideo.write(img)
             # increasing counter so that it will
             # show how many frames are created
             currentFrame += 1
@@ -35,5 +35,6 @@ if __name__ == "__main__":
     
     # Release all space and windows once done
     video.release()
+    newVideo.release()
     cv.waitKey(0)
     print('Main End')
