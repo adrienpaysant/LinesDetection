@@ -3,6 +3,7 @@
 The following functions allow to get and draw shapes on image to detect marbles.
 """
 __author__="Adrien Paysant, Joris Monnet"
+__date__="04/05/2021"
 
 import os
 import cv2
