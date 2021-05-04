@@ -80,7 +80,6 @@ def getClosestPointOnLine(marble1,marble2,marbleRunning):
             yFinal=yMax
     else :
         yFinal=yMin
-
     return xFinal,yFinal
 
 def getSideOfLine(p1,p2,p3):
