@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """ Main function """
 __author__="Adrien Paysant, Joris Monnet"
+__date__="04/05/2021"
+
 
 import imageTools 
 import os
