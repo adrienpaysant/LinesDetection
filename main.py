@@ -1,18 +1,27 @@
+#!/usr/bin/env python
+""" Main function """
+__author__="Adrien Paysant, Joris Monnet"
+
 import imageTools 
 import os
 import cv2 as cv
 import numpy
 import matplotlib.pyplot as plt
 
-def videoProgram():
-    video = cv.VideoCapture("./source_videos/data.mp4")
-    newVideo = cv.VideoWriter("newVideo.avi",cv.CAP_OPENCV_MJPEG,cv.VideoWriter_fourcc('M','J','P','G'),10,(1920,1080),True)
+def videoProgram(source,number):
+    """ Program used for videos input"""
+    print("=======================VIDEO========================")
+    video = cv.VideoCapture(source)
+    newVideo = cv.VideoWriter(f"newVideo{number}.avi",cv.CAP_OPENCV_MJPEG,cv.VideoWriter_fourcc('M','J','P','G'),10*number,(1920,1080),True)
     numberOfFrame = 0
     while(True):
         ret,frame = video.read()
 
         if ret:
-            img = imageTools.shapeDetectionOnVideo(frame)
+            if number == 1 :
+                img = imageTools.shapeDetectionOnOldVideo(frame)
+            else :
+                img = imageTools.shapeDetectionOnVideo(frame)
             newVideo.write(img)
             numberOfFrame += 1
         else:
@@ -22,16 +31,19 @@ def videoProgram():
     video.release()
     newVideo.release()
 
-if __name__ == "__main__":
-    print('Main Launching')
-
-
+def imageProgram():
+    """ Program used for images input"""
+    print("=======================IMAGE========================")
     imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnOldImage(f"./source_images/{0}.jpg"))
     imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnOldImage(f"./source_images/{1}.jpg"))
     for i in range(2,6):
         imageTools.showAndWait("basic shape detect",imageTools.shapeDetectionOnImage(f"./source_images/{i}.jpg"))
 
-    # videoProgram()
-    cv.waitKey(0)
-    print('Main End')
+if __name__ == "__main__":
 
+    imageProgram()
+
+    videoProgram("./source_videos/data.mp4",1)
+    videoProgram("./source_videos/data2.mp4",2)
+
+    cv.waitKey(0)
